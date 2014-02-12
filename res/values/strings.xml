@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NeverLate</string>
+    <string name="addAlarm">Add Alarm</string>
+    <string name="success">Success!</string>
+    <string name="done">Done</string>
+    <string name="doneButton">doneButton</string>
+    <string name="alarmActivated">Alarm Activated</string>
+    <string name="hour24Clock">24-hour clock</string>
+</resources>
