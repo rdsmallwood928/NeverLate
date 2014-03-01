@@ -4,12 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,6 +26,7 @@ public class AndroidClickSpinner extends LinearLayout {
 
     int currentIndex = 0;
     List<Object> spinnerModel;
+    private boolean wrap = true;
 
     public AndroidClickSpinner(Context context, List<Object> values) {
         super(context);
@@ -36,7 +34,7 @@ public class AndroidClickSpinner extends LinearLayout {
         spinnerModel = new ArrayList<Object>(values);
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.androidclickspinner, this, true);
+        inflater.inflate(R.layout.android_clicks_pinner, this, true);
         ImageButton upButton = (ImageButton) findViewById(R.id.clickSpinnerUp);
         upButton.setImageResource(R.drawable.arrow);
 
@@ -56,11 +54,12 @@ public class AndroidClickSpinner extends LinearLayout {
         upButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(currentIndex < spinnerModel.size()) {
-                    currentIndex++;
-                    middle.setText(spinnerModel.get(currentIndex).toString());
+                currentIndex++;
+                if(currentIndex == spinnerModel.size()) {
+                    currentIndex = wrap ? 0 : spinnerModel.size()-1;
                 }
+                middle.setText(spinnerModel.get(currentIndex).toString());
+
             }
         });
 
@@ -68,15 +67,20 @@ public class AndroidClickSpinner extends LinearLayout {
 
             @Override
             public void onClick(View v) {
-                if(currentIndex > 0) {
-                    currentIndex--;
-                    middle.setText(spinnerModel.get(currentIndex).toString());
+                currentIndex--;
+                if(currentIndex < 0) {
+                    currentIndex = wrap ? spinnerModel.size()-1 : 0;
                 }
+                middle.setText(spinnerModel.get(currentIndex).toString());
             }
         });
     }
 
     public Object getSelectedItem() {
         return spinnerModel.get(currentIndex);
+    }
+
+    public void setWrap(boolean shouldWrap) {
+        this.wrap = shouldWrap;
     }
 }

@@ -23,6 +23,7 @@
             android:text="@string/hour24Clock"
             android:id="@+id/hour24switch"
             android:layout_gravity="center"
-            android:enabled="true"/>
+            android:enabled="true"
+            android:onClick="createSpinners"/>
 
 </LinearLayout>

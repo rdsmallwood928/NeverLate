@@ -1,6 +1,8 @@
 package com.neverlate.NeverLate.activities;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.webkit.URLUtil;
 import com.neverlate.NeverLate.R;
 
 /**
@@ -16,5 +18,8 @@ public class AlarmActivatedActivity extends AlarmActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.show_alarm);
+        MediaPlayer player = MediaPlayer.create(this, R.raw.alarm);
+        player.setLooping(true);
+        player.start();
     }
 }
