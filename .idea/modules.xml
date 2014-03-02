@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/NeverLate.iml" filepath="$PROJECT_DIR$/NeverLate.iml" />
-      <module fileurl="file://$USER_HOME$/NeverLateLibrary/NeverLateLibrary/NeverLateLibrary.iml" filepath="$USER_HOME$/NeverLateLibrary/NeverLateLibrary/NeverLateLibrary.iml" />
     </modules>
   </component>
 </project>
