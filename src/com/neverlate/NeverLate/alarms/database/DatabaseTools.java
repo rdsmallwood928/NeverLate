@@ -65,6 +65,7 @@ public class DatabaseTools extends SQLiteOpenHelper {
                 for(int i=0; i<cursor.getColumnCount(); i++) {
                     row.add(cursor.getString(i));
                 }
+                tableLists.add(row);
             } while (cursor.moveToNext());
         }
         return tableLists;

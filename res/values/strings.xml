@@ -7,4 +7,6 @@
     <string name="doneButton">doneButton</string>
     <string name="alarmActivated">Alarm Activated</string>
     <string name="hour24Clock">24-hour clock</string>
+    <string name="close">Close</string>
+    <string name="desc_list_item_icon">Item Icon</string>
 </resources>

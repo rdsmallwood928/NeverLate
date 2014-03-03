@@ -33,6 +33,7 @@ public class AddAlarmActivity extends AlarmActivity {
         hour24Switch = (Switch) findViewById(R.id.hour24switch);
         hour24Switch.setChecked(false);
         createSpinners(hour24Switch);
+
     }
 
 

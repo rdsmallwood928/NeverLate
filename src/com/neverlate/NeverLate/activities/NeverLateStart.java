@@ -31,11 +31,21 @@ public class NeverLateStart extends AlarmActivity {
 
     public void onStart() {
         super.onStart();
+    }
+
+    public void onResume() {
+        super.onResume();
+        setUpMainActivity();
+    }
+
+    private void setUpMainActivity() {
+        super.onStart();
         if(!alarmActivated) {
             AlarmClockManager manager = AlarmClockManager.getInstance(this);
             LinearLayout alarmLayout = (LinearLayout) findViewById(R.id.current_alarms_layout);
+            alarmLayout.removeAllViews();
             for(Alarm alarm : manager.getAlarms()) {
-                alarmLayout.addView(new AlarmAndroidView(this.getApplicationContext(), alarm).getView());
+                alarmLayout.addView(new AlarmAndroidView(this.getApplicationContext(), alarm));
             }
         } else {
             this.setContentView(R.layout.show_alarm);
@@ -56,8 +66,23 @@ public class NeverLateStart extends AlarmActivity {
                 Intent intent = new Intent(this, AddAlarmActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.close_application_item:
+                onDestroy();
+                return true;
+            case R.id.run_db_tests:
+                AlarmClockManager.reset();
+                AlarmClockManager.getInstance(this);
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        menu.clear();
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
 }

@@ -14,12 +14,22 @@ import com.neverlate.NeverLate.R;
  */
 public class AlarmActivatedActivity extends AlarmActivity {
 
+    private MediaPlayer player;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.show_alarm);
-        MediaPlayer player = MediaPlayer.create(this, R.raw.alarm);
+        player = MediaPlayer.create(this, R.raw.alarm);
         player.setLooping(true);
         player.start();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(player.isPlaying()) {
+            player.stop();
+        }
     }
 }

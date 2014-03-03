@@ -41,4 +41,10 @@ public class AlarmActivity extends Activity implements IAlarmListener{
         super.onStart();
         AlarmClockManager.getInstance(this).setCurrentView(this);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        AlarmClockManager.getInstance(this).onStop();
+    }
 }

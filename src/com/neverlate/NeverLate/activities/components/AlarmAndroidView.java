@@ -1,9 +1,12 @@
 package com.neverlate.NeverLate.activities.components;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.NinePatch;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,26 +22,14 @@ import com.neverlate.NeverLate.alarms.Alarm;
  * Time: 9:42 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AlarmAndroidView {
-
-    private LinearLayout alarmLayout;
+public class AlarmAndroidView extends LinearLayout {
 
     public AlarmAndroidView(Context context, Alarm alarm) {
-        alarmLayout = new LinearLayout(context);
-        alarmLayout.setGravity(Gravity.CENTER);
-        alarmLayout.setOrientation(LinearLayout.HORIZONTAL);
-        ImageView image;
-        image = new ImageView(context);
-        image.setImageDrawable(context.getResources().getDrawable(R.drawable.alarm48));
-        alarmLayout.addView(image);
-        TextView textView = new TextView(context);
+        super(context);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.android_alarm_view, this);
+        TextView textView = (TextView)findViewById(R.id.alarm_time_text);
         textView.setText(alarm.getAlarmString());
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PT, 20);
-        alarmLayout.addView(textView);
-    }
-
-    public View getView() {
-        return alarmLayout;
     }
 }
 

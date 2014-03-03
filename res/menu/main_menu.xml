@@ -4,4 +4,8 @@
           android:icon="@drawable/plus48"
           android:title="@string/addAlarm"
           android:showAsAction="ifRoom"/>
+    <item android:id="@+id/close_application_item"
+          android:title="@string/close"/>
+    <item android:id="@+id/run_db_tests"
+          android:title="RUN DB TESTS"/>
 </menu>

@@ -20,7 +20,7 @@ public class AlarmClockManager implements IAlarmListener{
     private IAlarmListener currentView;
     private int nextAlarmId=0;
     public static final String ALARMS_TABLE = "alarms";
-    public static final String DATABASE = "alarms.db";
+    public static final String DATABASE = "neverlatealarms.db";
     DatabaseTools databaseTools;
 
     private AlarmClockManager (Context context) {
@@ -69,5 +69,13 @@ public class AlarmClockManager implements IAlarmListener{
 
     public int getNextAlarmId() {
         return nextAlarmId;
+    }
+
+    public void onStop() {
+        databaseTools.close();
+    }
+
+    public static void reset() {
+        instance = null;
     }
 }

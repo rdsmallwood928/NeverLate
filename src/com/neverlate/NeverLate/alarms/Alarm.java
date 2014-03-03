@@ -92,7 +92,7 @@ public class Alarm{
     }
 
     public String getAlarmString() {
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm aa");
         return dateFormat.format(activationTime.toDate());
     }
 
