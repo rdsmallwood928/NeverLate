@@ -9,4 +9,9 @@
     <string name="hour24Clock">24-hour clock</string>
     <string name="close">Close</string>
     <string name="desc_list_item_icon">Item Icon</string>
+
+    <string-array name="nav_drawer_items">
+        <item >@string/addAlarm</item>
+        <item >Delete Alarm</item>
+    </string-array>
 </resources>

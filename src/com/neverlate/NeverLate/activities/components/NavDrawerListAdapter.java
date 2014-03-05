@@ -11,15 +11,16 @@ import android.widget.TextView;
 import com.neverlate.NeverLate.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bigwood928 on 3/2/14.
  */
 public class NavDrawerListAdapter extends BaseAdapter {
     private Context context;
-    private ArrayList<NavDrawerItem> navDrawerItems;
+    private List<NavDrawerItem> navDrawerItems;
 
-    public NavDrawerListAdapter(Context context, ArrayList<NavDrawerItem> navDrawerItems){
+    public NavDrawerListAdapter(Context context, List<NavDrawerItem> navDrawerItems){
         this.context = context;
         this.navDrawerItems = navDrawerItems;
     }
