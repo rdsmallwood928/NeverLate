@@ -8,8 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.neverlate.NeverLate.alarms.Alarm;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,23 +21,18 @@ public class DatabaseTools extends SQLiteOpenHelper {
 
 
     public DatabaseTools(Context context, String databaseName) {
-        //This seems like a weird hack, but looking at the source for SQLiteOPenHelper, create db only gets called if the version
-        //number is 0, however we are not allowed to set the version to 0 without throwing.  I will set it to two for now in order to force
-        //onUpgrade...
-
-        //Prolly get rid of all this for hibernate later anyway...
-        super(context, databaseName, null, 2);
+        super(context, databaseName, null, 3);
     }
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        String query = "CREATE TABLE IF NOT EXISTS alarms (alarmId INTEGER PRIMARY KEY, time LONG)";
+        String query = "CREATE TABLE IF NOT EXISTS alarms (alarmId INTEGER PRIMARY KEY, minutes INTEGER, hour INTEGER, days INTEGER, armed BOOLEAN)";
         database.execSQL(query);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-        if(newVersion > 2) {
+        if(newVersion > 3) {
             String query = "DROP TABLE IF EXISTS alarms";
             database.execSQL(query);
         }
@@ -50,9 +43,23 @@ public class DatabaseTools extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("alarmId", alarm.getAlarmId());
-        values.put("time", alarm.getActivationTime().getTime());
+        values.put("hour", alarm.getHours());
+        values.put("minutes", alarm.getMinutes());
+        values.put("days", convertDaysToInt(alarm.getDays()));
+        values.put("armed", alarm.isArmed());
         database.insert("alarms", null, values);
         database.close();
+    }
+
+    private int convertDaysToInt(boolean[] days) {
+        int daysInt = 0;
+        for(int i=0; i<days.length; i++) {
+            if(days[i]) {
+                daysInt++;
+            }
+            daysInt = daysInt << 1;
+        }
+        return daysInt;
     }
 
     public List<List<String>> loadTable(String table) {
@@ -69,5 +76,13 @@ public class DatabaseTools extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return tableLists;
+    }
+
+    public void removeAlarm(Alarm alarm) {
+        SQLiteDatabase database = getWritableDatabase();
+        String[] args = new String[1];
+        args[0] = String.valueOf(alarm.getAlarmId());
+        database.delete("alarms", "alarmId = ?", args);
+        database.close();
     }
 }

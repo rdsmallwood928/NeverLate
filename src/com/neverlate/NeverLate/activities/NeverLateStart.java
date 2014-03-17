@@ -1,32 +1,22 @@
 package com.neverlate.NeverLate.activities;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
-import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import com.neverlate.NeverLate.R;
-import com.neverlate.NeverLate.activities.components.AlarmAndroidView;
 import com.neverlate.NeverLate.activities.components.NavDrawerItem;
 import com.neverlate.NeverLate.activities.components.NavDrawerListAdapter;
 import com.neverlate.NeverLate.alarms.Alarm;
 import com.neverlate.NeverLate.alarms.AlarmClockManager;
-import com.neverlate.NeverLate.alarms.database.DatabaseTools;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class NeverLateStart extends AlarmActivity {
@@ -34,11 +24,35 @@ public class NeverLateStart extends AlarmActivity {
     private String[] navMenuTitles;
     private ListView navDrawerList;
     private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
+    private Fragment currentFragment;
+    private AddAlarmFragment addAlarmFragment;
+    private AlarmsListFragment alarmsListFragment;
+
+    @Override
+    public void fireAlarmRemoved() {
+        reloadAlarms();
+    }
+
+    @Override
+    public void fireAlarmArmed(boolean armed) {
+        reloadAlarms();
+    }
+
+    private void reloadAlarms() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                alarmsListFragment.reloadAlarms();
+            }
+        });
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        setUpMainActivity(savedInstanceState);
     }
 
 
@@ -49,90 +63,81 @@ public class NeverLateStart extends AlarmActivity {
         // update the main content by replacing fragments
         Fragment fragment = null;
         switch (position) {
+            case 1:
+                if(addAlarmFragment == null) {
+                    addAlarmFragment = new AddAlarmFragment();
+                }
+                fragment = addAlarmFragment;
+                break;
             default:
+                fragment = getAlarmsListFragment();
                 break;
         }
-
-        if (fragment != null) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
-
-            // update selected item and title, then close the drawer
-            navDrawerList.setItemChecked(position, true);
-            navDrawerList.setSelection(position);
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+        currentFragment = fragment;
+        // update selected item and title, then close the drawer
+        navDrawerList.setItemChecked(position, true);
+        navDrawerList.setSelection(position);
+        if(position == 0) {
+            setTitle(R.string.app_name);
+        } else {
             setTitle(navMenuTitles[position]);
-            drawerLayout.closeDrawer(navDrawerList);
-        } else {
-            // error in creating fragment
-            Log.e("MainActivity", "Error in creating fragment");
         }
+        drawerLayout.closeDrawer(navDrawerList);
     }
 
-    public void onStart() {
-        super.onStart();
-    }
+    private void setUpMainActivity(Bundle savedInstanceState) {
+        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        List<NavDrawerItem> navDrawerItems = new ArrayList<>();
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], R.drawable.alarm));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], R.drawable.alarm));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], R.drawable.alarm));
 
-    public void onResume() {
-        super.onResume();
-        setUpMainActivity();
-    }
+        NavDrawerListAdapter adapter = new NavDrawerListAdapter(getApplicationContext(),  navDrawerItems);
+        navDrawerList = (ListView) findViewById(R.id.left_drawer);
+        navDrawerList.setAdapter(adapter);
 
-    private void setUpMainActivity() {
-        super.onStart();
-        if(!alarmActivated) {
-
-            navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
-            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-            List<NavDrawerItem> navDrawerItems = new ArrayList<>();
-            navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], R.drawable.alarm));
-            navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], R.drawable.alarm));
-
-            NavDrawerListAdapter adapter = new NavDrawerListAdapter(getApplicationContext(),  navDrawerItems);
-            navDrawerList = (ListView) findViewById(R.id.left_drawer);
-            navDrawerList.setAdapter(adapter);
-
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            getActionBar().setHomeButtonEnabled(true);
-
-            ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.app_name, R.string.app_name){
-                public void onDrawerClosed(View view) {
-                    getActionBar().setTitle(getTitle());
-                    invalidateOptionsMenu();
-                }
-
-                public void onDrawerOpened(View drawerView) {
-                    getActionBar().setTitle(getTitle());
-                    invalidateOptionsMenu();
-                }
-            };
-            drawerLayout.setDrawerListener(drawerToggle);
-            displayView(0);
-            navDrawerList.setOnItemClickListener(new SlideMenuClickListener());
-            AlarmClockManager manager = AlarmClockManager.getInstance(this);
-            LinearLayout alarmLayout = (LinearLayout) findViewById(R.id.current_alarms_layout);
-            alarmLayout.removeAllViews();
-            for(Alarm alarm : manager.getAlarms()) {
-                alarmLayout.addView(new AlarmAndroidView(this.getApplicationContext(), alarm));
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.empty, R.string.empty){
+            public void onDrawerClosed(View view) {
+                getActionBar().setTitle(getTitle());
+                invalidateOptionsMenu();
             }
-        } else {
-            this.setContentView(R.layout.show_alarm);
-        }
+
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle(getTitle());
+                invalidateOptionsMenu();
+            }
+        };
+        drawerLayout.setDrawerListener(drawerToggle);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+        displayView(0);
+        navDrawerList.setOnItemClickListener(new SlideMenuClickListener());
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
+       if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        Fragment fragment = null;
         switch (item.getItemId()) {
             case R.id.action_add_alarm:
-                Intent intent = new Intent(this, AddAlarmActivity.class);
-                startActivity(intent);
+                fragment = new AddAlarmFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
                 return true;
             case R.id.close_application_item:
                 onDestroy();
@@ -145,21 +150,41 @@ public class NeverLateStart extends AlarmActivity {
         }
     }
 
-    @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
-        menu.clear();
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    private class SlideMenuClickListener implements
-            ListView.OnItemClickListener {
+    private class SlideMenuClickListener implements ListView.OnItemClickListener {
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             // display view for selected nav drawer item
             displayView(position);
         }
+    }
+
+    public void onDoneClicked(View view) {
+        AsyncTask task = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] params) {
+                Integer hour = addAlarmFragment.getHours();
+                Integer minute = addAlarmFragment.getMinutes();
+                boolean[] days = addAlarmFragment.getDays();
+                Alarm alarm = new Alarm(hour, minute, days);
+                AlarmClockManager.getInstance(NeverLateStart.this).addAlarm(alarm);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Object result) {
+                super.onPostExecute(result);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.frame_container, getAlarmsListFragment()).commit();
+                setTitle(R.string.app_name);
+            }
+        };
+        task.execute(null);
+    }
+
+    private AlarmsListFragment getAlarmsListFragment() {
+        if(alarmsListFragment == null) {
+            alarmsListFragment = new AlarmsListFragment();
+        }
+        return alarmsListFragment;
     }
 }

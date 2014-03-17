@@ -12,10 +12,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.AddAlarmActivity"
-                  android:label="@string/addAlarm">
-
-        </activity>
         <activity android:name=".activities.AlarmActivatedActivity"
                   android:label="@string/alarmActivated">
 

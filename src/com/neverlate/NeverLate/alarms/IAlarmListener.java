@@ -9,4 +9,6 @@ package com.neverlate.NeverLate.alarms;
  */
 public interface IAlarmListener {
     public void fireAlarmActivated();
+    public void fireAlarmRemoved();
+    public void fireAlarmArmed(boolean armed);
 }

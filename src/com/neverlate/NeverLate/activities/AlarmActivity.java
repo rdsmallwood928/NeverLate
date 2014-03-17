@@ -1,8 +1,10 @@
 package com.neverlate.NeverLate.activities;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import com.neverlate.NeverLate.R;
 import com.neverlate.NeverLate.alarms.AlarmClockManager;
 import com.neverlate.NeverLate.alarms.IAlarmListener;
@@ -28,6 +30,16 @@ public class AlarmActivity extends Activity implements IAlarmListener{
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void fireAlarmRemoved() {
+
+    }
+
+    @Override
+    public void fireAlarmArmed(boolean armed) {
+
     }
 
     @Override

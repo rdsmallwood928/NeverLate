@@ -52,10 +52,36 @@ public class AlarmClockManager implements IAlarmListener{
         databaseTools.insertAlarm(newAlarm);
     }
 
+    public void removeAlarm(Alarm alarm) {
+        alarms.remove(alarm);
+        databaseTools.removeAlarm(alarm);
+        currentView.fireAlarmRemoved();
+    }
+
     private void loadAlarmsFromDB() {
+
         for(List<String> row : databaseTools.loadTable(ALARMS_TABLE)) {
-            addAlarm(new Alarm(Integer.parseInt(row.get(0)), new DateTime(Long.parseLong(row.get(1)))));
+            Alarm alarm = new Alarm(Integer.parseInt(row.get(0)),
+                    Integer.parseInt(row.get(1)),
+                    Integer.parseInt(row.get(2)),
+                    convertStringToDays(row.get(3)),
+                    Boolean.parseBoolean(row.get(4)));
+            alarms.add(alarm);
+            alarm.addListener(this);
+            if(alarm.getAlarmId() >= nextAlarmId) {
+                nextAlarmId = alarm.getAlarmId() + 1;
+            }
         }
+    }
+
+    private boolean[] convertStringToDays(String days) {
+        boolean[] returnDays =  new boolean[7];
+        Integer daysAsInt = Integer.parseInt(days);
+        for(int i=0; i<returnDays.length; i++) {
+            returnDays[i] = (daysAsInt & 0xffff) == 1;
+            daysAsInt = daysAsInt >> 1;
+        }
+        return returnDays;
     }
 
     public void setCurrentView(IAlarmListener listener) {
@@ -65,6 +91,17 @@ public class AlarmClockManager implements IAlarmListener{
     @Override
     public void fireAlarmActivated() {
         currentView.fireAlarmActivated();
+    }
+
+    @Override
+    public void fireAlarmRemoved() {
+
+    }
+
+    @Override
+    public void fireAlarmArmed(boolean armed) {
+        currentView.fireAlarmArmed(armed);
+
     }
 
     public int getNextAlarmId() {

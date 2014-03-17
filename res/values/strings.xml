@@ -9,8 +9,17 @@
     <string name="hour24Clock">24-hour clock</string>
     <string name="close">Close</string>
     <string name="desc_list_item_icon">Item Icon</string>
+    <string name="empty"/>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="S">S</string>
+    <string name="M">M</string>
+    <string name="T">T</string>
+    <string name="W">W</string>
+    <string name="F">F</string>
 
     <string-array name="nav_drawer_items">
+        <item>Home</item>
         <item >@string/addAlarm</item>
         <item >Delete Alarm</item>
     </string-array>
