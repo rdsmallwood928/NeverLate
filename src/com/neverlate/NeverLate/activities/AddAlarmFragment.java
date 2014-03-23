@@ -3,6 +3,7 @@ package com.neverlate.NeverLate.activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.ToggleButton;
 import com.neverlate.NeverLate.R;
 import com.neverlate.NeverLate.activities.components.AlarmAndroidView;
 import com.neverlate.NeverLate.activities.components.AndroidClickSpinner;
+import com.neverlate.NeverLate.activities.components.AndroidScrollSpinner;
+import com.neverlate.NeverLate.activities.components.PieChart;
 import com.neverlate.NeverLate.alarms.Alarm;
 import com.neverlate.NeverLate.alarms.AlarmClockManager;
 import org.joda.time.LocalDate;
@@ -50,6 +53,11 @@ public class AddAlarmFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         createSpinners(view);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     public void createSpinners(View view) {
@@ -107,6 +115,16 @@ public class AddAlarmFragment extends Fragment {
                 sundayToggle.setSelected(true);
                 break;
         }
+        PieChart pie = new PieChart(getActivity());
+        Resources res = getResources();
+        pie.addItem("Agamemnon", 2, res.getColor(R.color.seafoam));
+        pie.addItem("Bocephus", 3.5f, res.getColor(R.color.chartreuse));
+        pie.addItem("Calliope", 2.5f, res.getColor(R.color.emerald));
+        pie.addItem("Daedalus", 3, res.getColor(R.color.bluegrass));
+        pie.addItem("Euripides", 1, res.getColor(R.color.turquoise));
+        pie.addItem("Ganymede", 3, res.getColor(R.color.slate));
+        layout.addView(pie);
+        layout.addView(new AndroidScrollSpinner(getActivity()));
     }
 
     public Integer getHours() {
