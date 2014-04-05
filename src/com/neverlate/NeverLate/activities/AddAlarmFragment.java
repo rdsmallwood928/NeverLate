@@ -1,5 +1,6 @@
 package com.neverlate.NeverLate.activities;
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -63,20 +64,13 @@ public class AddAlarmFragment extends Fragment {
     public void createSpinners(View view) {
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.addAlarmSpinnerLayout);
         hour24Switch = (Switch) view.findViewById(R.id.hour24switch);
-        layout.removeAllViews();
         ArrayList<Object> hours = new ArrayList<>();
         if(hour24Switch.isChecked())  {
             for(int i=0;i<24;i++) hours.add(i);
         } else {
             for(int i=1;i<=12;i++) hours.add(i);
         }
-
-        hourSpinner = new AndroidClickSpinner(getActivity(), hours);
-        layout.addView(hourSpinner);
         ArrayList<Object> minutes = new ArrayList<>();
-        for(int i=0;i<=60;i++) minutes.add(i);
-        minuteSpinner = new AndroidClickSpinner(getActivity(), minutes);
-        layout.addView(minuteSpinner);
         if(!hour24Switch.isChecked()) {
             ArrayList<Object> amPm = new ArrayList<>();
             amPm.add("AM");
@@ -115,16 +109,6 @@ public class AddAlarmFragment extends Fragment {
                 sundayToggle.setSelected(true);
                 break;
         }
-        PieChart pie = new PieChart(getActivity());
-        Resources res = getResources();
-        pie.addItem("Agamemnon", 2, res.getColor(R.color.seafoam));
-        pie.addItem("Bocephus", 3.5f, res.getColor(R.color.chartreuse));
-        pie.addItem("Calliope", 2.5f, res.getColor(R.color.emerald));
-        pie.addItem("Daedalus", 3, res.getColor(R.color.bluegrass));
-        pie.addItem("Euripides", 1, res.getColor(R.color.turquoise));
-        pie.addItem("Ganymede", 3, res.getColor(R.color.slate));
-        layout.addView(pie);
-        layout.addView(new AndroidScrollSpinner(getActivity()));
     }
 
     public Integer getHours() {
