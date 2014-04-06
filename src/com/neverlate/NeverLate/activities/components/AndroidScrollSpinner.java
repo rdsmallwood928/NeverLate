@@ -62,8 +62,7 @@ public class AndroidScrollSpinner extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawBitmap(mBitmap, 0, 0, mPaint);
-        canvas.drawRect(new Rect(0, 0, getWidth(), getBottom()), mPaint);
+        canvas.drawColor(getResources().getColor(R.color.bluegrass));
         canvas.drawText("Bert", getWidth()/2 , getWidth()/2, mPaint);
     }
 
