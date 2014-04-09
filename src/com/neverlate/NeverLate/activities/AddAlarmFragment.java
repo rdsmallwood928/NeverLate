@@ -1,25 +1,16 @@
 package com.neverlate.NeverLate.activities;
 
-import android.app.ActionBar;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.ToggleButton;
 import com.neverlate.NeverLate.R;
-import com.neverlate.NeverLate.activities.components.AlarmAndroidView;
 import com.neverlate.NeverLate.activities.components.AndroidClickSpinner;
-import com.neverlate.NeverLate.activities.components.AndroidScrollSpinner;
-import com.neverlate.NeverLate.activities.components.PieChart;
-import com.neverlate.NeverLate.alarms.Alarm;
-import com.neverlate.NeverLate.alarms.AlarmClockManager;
+import com.neverlate.NeverLate.activities.components.AndroidScrollSpinner.AndroidScrollSpinner;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -33,8 +24,8 @@ import java.util.ArrayList;
  */
 public class AddAlarmFragment extends Fragment {
 
-    private AndroidClickSpinner minuteSpinner;
-    private AndroidClickSpinner hourSpinner;
+    private AndroidScrollSpinner minuteSpinner;
+    private AndroidScrollSpinner hourSpinner;
     private AndroidClickSpinner amPmSpinner;
     private ToggleButton mondayToggle;
     private ToggleButton tuesdayToggle;
@@ -70,7 +61,15 @@ public class AddAlarmFragment extends Fragment {
         } else {
             for(int i=1;i<=12;i++) hours.add(i);
         }
+
+        hourSpinner = (AndroidScrollSpinner) view.findViewById(R.id.hourSpinner);
+        hourSpinner.setModel(hours);
         ArrayList<Object> minutes = new ArrayList<>();
+        for(int i=0;i<60;i++) {
+            minutes.add(i);
+        }
+        minuteSpinner = (AndroidScrollSpinner) view.findViewById(R.id.minuteSpinner);
+        minuteSpinner.setModel(minutes);
         if(!hour24Switch.isChecked()) {
             ArrayList<Object> amPm = new ArrayList<>();
             amPm.add("AM");

@@ -3,19 +3,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="fill_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="fill_parent">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="horizontal"
                   android:layout_width="fill_parent"
-                  android:layout_height="match_parent"
+                  android:layout_height="fill_parent"
                   android:gravity="center_horizontal"
-                  android:id="@+id/addAlarmSpinnerLayout">
-        <com.neverlate.NeverLate.activities.components.AndroidScrollSpinner
+                  android:id="@+id/addAlarmSpinnerLayout"
+                  android:layout_weight="0.5">
+        <com.neverlate.NeverLate.activities.components.AndroidScrollSpinner.AndroidScrollSpinner
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:layout_gravity="center"
+            android:layout_weight="0.5"
             android:id="@+id/hourSpinner"
         />
+        <com.neverlate.NeverLate.activities.components.AndroidScrollSpinner.AndroidScrollSpinner
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:id="@+id/minuteSpinner"
+                />
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content">
